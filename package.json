@@ -1,0 +1,28 @@
+{
+  "name": "mern-support-app",
+  "version": "1.0.0",
+  "description": "MERN Stack Support Ticket Application",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm run dev",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "install-server": "cd server && npm install",
+    "install-client": "cd client && npm install",
+    "install-all": "npm install && npm run install-server && npm run install-client",
+    "build": "cd client && npm run build"
+  },
+  "keywords": [
+    "mern",
+    "react",
+    "node",
+    "express",
+    "mongodb"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
