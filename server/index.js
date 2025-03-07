@@ -72,6 +72,8 @@ mongoose
       process.exit(1);
     }
   });
-
+app.use("/", (req, res) => {
+  res.send("Hello World");
+});
 // Export the Express app for serverless deployment
 module.exports = app;
