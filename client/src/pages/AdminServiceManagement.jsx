@@ -399,52 +399,55 @@ const AdminServiceManagement = () => {
           ) : services.length === 0 ? (
             <p className="text-gray-500">No services found.</p>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+            <div className="overflow-x-hidden">
+              <table className="min-w-full divide-y divide-border-light dark:divide-border-dark  rounded-lg">
+                <thead className="bg-background-light dark:bg-background-dark overflow-x-hidden">
                   <tr>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-left text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider"
                     >
                       Title
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-left text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider"
                     >
                       Price
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-left text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider"
                     >
                       Status
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-left text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider"
                     >
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-background-light dark:bg-transparent divide-y divide-border-light dark:divide-border-dark rounded-lg">
                   {services.map((service) => (
-                    <tr key={service._id} className="hover:bg-gray-50">
+                    <tr
+                      key={service._id}
+                      className="hover:bg-background-light dark:hover:bg-background-dark/50"
+                    >
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">
+                        <div className="text-sm font-medium text-text-primary-light dark:text-text-primary-dark">
                           {service.title}
                         </div>
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-text-secondary-light dark:text-text-secondary-dark">
                           {service.category}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
+                        <div className="text-sm text-text-primary-light dark:text-text-primary-dark">
                           ${service.price.toFixed(2)}
                         </div>
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-text-secondary-light dark:text-text-secondary-dark">
                           {service.duration} min
                         </div>
                       </td>

@@ -356,7 +356,8 @@ const AdminDashboard = () => {
           <div className="p-6">
             <h3 className="text-xl font-semibold mb-4">Booking Management</h3>
             <p className="text-gray-600 mb-4">
-              View and manage customer bookings.
+              View and manage customer bookings. and change the status of the
+              booking
             </p>
             <Link to="/admin/bookings" className="btn btn-primary w-full">
               Manage Bookings

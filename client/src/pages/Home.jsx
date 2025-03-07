@@ -6,7 +6,7 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section - Elegant version without wave */}
-      <section className="relative py-24 bg-gradient-to-br from-surface-light to-background-light dark:from-surface-dark dark:to-background-dark overflow-hidden">
+      <section className="relative py-24  overflow-hidden ">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row items-center gap-16">
             <motion.div
@@ -132,7 +132,7 @@ const Home = () => {
       </section>
 
       {/* About Us Section - Elegant version */}
-      <section className="py-24 bg-surface-light dark:bg-surface-dark">
+      <section className="py-24 ">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row items-center gap-16">
             <motion.div
@@ -277,7 +277,7 @@ const Home = () => {
       </section>
 
       {/* CTA Section - Elegant version */}
-      <section className="py-20 bg-gradient-to-br from-primary-light to-secondary-light dark:from-primary-dark dark:to-secondary-dark text-white">
+      <section className="py-20 bg-gradient-to-br from-primary-light to-secondary-light dark:from-border-dark dark:to-surface-dark text-white">
         <div className="container mx-auto px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}

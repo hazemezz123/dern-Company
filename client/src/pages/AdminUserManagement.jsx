@@ -167,35 +167,38 @@ const AdminUserManagement = () => {
             <p className="text-gray-500">No admin users found.</p>
           ) : (
             <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
+              <table className="min-w-full divide-y divide-border-light dark:divide-border-dark">
+                <thead className="bg-background-light dark:bg-background-dark">
                   <tr>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-left text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider"
                     >
                       Name
                     </th>
                     <th
                       scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      className="px-6 py-3 text-left text-xs font-medium text-text-secondary-light dark:text-text-secondary-dark uppercase tracking-wider"
                     >
                       Email
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-background-light dark:bg-transparent divide-y divide-border-light dark:divide-border-dark">
                   {users
                     .filter((u) => u.role === "admin")
                     .map((adminUser) => (
-                      <tr key={adminUser._id} className="hover:bg-gray-50">
+                      <tr
+                        key={adminUser._id}
+                        className="hover:bg-background-light dark:hover:bg-background-dark/50"
+                      >
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900">
+                          <div className="text-sm font-medium text-text-primary-light dark:text-text-primary-dark">
                             {adminUser.name}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-500">
+                          <div className="text-sm text-text-secondary-light dark:text-text-secondary-dark">
                             {adminUser.email}
                           </div>
                         </td>
