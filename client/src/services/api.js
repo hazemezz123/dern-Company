@@ -7,7 +7,19 @@ const api = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: false, // Set to false for cross-origin requests without credentials
 });
+
+// Add request interceptor to handle CORS
+api.interceptors.request.use(
+  (config) => {
+    // You can modify the request config here if needed
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 // Auth services
 export const registerUser = async (userData) => {

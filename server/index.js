@@ -18,36 +18,45 @@ const userRoutes = require("./routes/users");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Normalize CLIENT_URL to remove trailing slash if present
-const clientUrl = process.env.CLIENT_URL
-  ? process.env.CLIENT_URL.replace(/\/$/, "")
-  : "";
-const allowedOrigins = [clientUrl, "http://localhost:5173"];
-
-// Middleware
-app.use(express.json());
+// CORS configuration - more permissive for troubleshooting
 app.use(
   cors({
-    origin: function (origin, callback) {
-      // Allow requests with no origin (like mobile apps, curl requests)
-      if (!origin) return callback(null, true);
-
-      // Check if the origin is allowed
-      if (
-        allowedOrigins.indexOf(origin) !== -1 ||
-        process.env.NODE_ENV !== "production"
-      ) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
+    origin: "*", // Allow all origins temporarily for debugging
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+    credentials: true,
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
   })
 );
-app.use(helmet());
+
+// Apply CORS headers to all responses as a backup
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+  );
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, X-Requested-With"
+  );
+  res.header("Access-Control-Allow-Credentials", "true");
+
+  // Handle preflight requests
+  if (req.method === "OPTIONS") {
+    return res.status(204).send();
+  }
+  next();
+});
+
+app.use(express.json());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    contentSecurityPolicy: false,
+  })
+);
 app.use(morgan("dev"));
 
 // Health check route
