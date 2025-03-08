@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import emailjs from "@emailjs/browser";
@@ -7,7 +7,66 @@ const ContactUs = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [debugInfo, setDebugInfo] = useState("");
   const formRef = useRef();
+
+  // Initialize EmailJS
+  useEffect(() => {
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+    if (publicKey) {
+      emailjs.init(publicKey);
+      console.log("EmailJS initialized with public key");
+    } else {
+      console.error("EmailJS public key is missing");
+    }
+  }, []);
+
+  // Test EmailJS configuration
+  const testEmailJSConfig = async () => {
+    try {
+      setDebugInfo("Testing EmailJS configuration...");
+
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+      setDebugInfo((prev) => prev + `\nService ID: ${serviceId ? "✓" : "✗"}`);
+      setDebugInfo((prev) => prev + `\nTemplate ID: ${templateId ? "✓" : "✗"}`);
+      setDebugInfo((prev) => prev + `\nPublic Key: ${publicKey ? "✓" : "✗"}`);
+
+      // Only proceed if all credentials are available
+      if (!serviceId || !templateId || !publicKey) {
+        setDebugInfo((prev) => prev + "\nMissing credentials. Test aborted.");
+        return;
+      }
+
+      // Send a test email
+      setDebugInfo((prev) => prev + "\nSending test email...");
+      const response = await emailjs.send(serviceId, templateId, {
+        from_name: "Test User",
+        from_email: "test@example.com",
+        subject: "EmailJS Test",
+        message: "This is a test message from the Contact Us form.",
+      });
+
+      setDebugInfo(
+        (prev) =>
+          prev +
+          `\nTest email sent successfully! Status: ${response.status}, Text: ${response.text}`
+      );
+    } catch (err) {
+      console.error("Test email failed:", err);
+      setDebugInfo(
+        (prev) => prev + `\nTest failed: ${err.message || "Unknown error"}`
+      );
+      if (err.status) {
+        setDebugInfo((prev) => prev + `\nStatus code: ${err.status}`);
+      }
+      if (err.text) {
+        setDebugInfo((prev) => prev + `\nResponse text: ${err.text}`);
+      }
+    }
+  };
 
   const {
     register,
@@ -24,7 +83,16 @@ const ContactUs = () => {
       // Get EmailJS credentials from environment variables
       const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
       const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+      // Check if credentials are available
+      if (!serviceId || !templateId) {
+        throw new Error(
+          "EmailJS configuration is missing. Please check your environment variables."
+        );
+      }
+
+      // Log for debugging (remove in production)
+      console.log("Sending email with:", { serviceId, templateId });
 
       // Prepare template parameters
       const templateParams = {
@@ -34,8 +102,23 @@ const ContactUs = () => {
         message: data.message,
       };
 
-      // Send email using EmailJS
-      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+      // Send email using EmailJS with a timeout
+      const response = await Promise.race([
+        emailjs.send(serviceId, templateId, templateParams),
+        new Promise((_, reject) =>
+          setTimeout(
+            () =>
+              reject(
+                new Error(
+                  "Request timed out. Please check your internet connection."
+                )
+              ),
+            15000
+          )
+        ),
+      ]);
+
+      console.log("Email sent successfully:", response);
 
       setIsSubmitted(true);
       reset();
@@ -46,7 +129,23 @@ const ContactUs = () => {
       }, 5000);
     } catch (err) {
       console.error("Error sending email:", err);
-      setError("Failed to send your message. Please try again later.");
+
+      // Provide more specific error messages
+      if (err.message.includes("timeout")) {
+        setError(
+          "Request timed out. Please check your internet connection and try again."
+        );
+      } else if (err.status === 400) {
+        setError("Invalid email parameters. Please check your form inputs.");
+      } else if (err.status === 401 || err.status === 403) {
+        setError("Authentication error. Please contact the administrator.");
+      } else if (err.status >= 500) {
+        setError("EmailJS server error. Please try again later.");
+      } else {
+        setError(
+          `Failed to send your message: ${err.message || "Unknown error"}`
+        );
+      }
     } finally {
       setIsLoading(false);
     }
@@ -405,6 +504,24 @@ const ContactUs = () => {
           </div>
         </div>
       </motion.section>
+
+      {/* Debug section - only visible in development */}
+      {import.meta.env.DEV && (
+        <div className="mt-8 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+          <h3 className="text-lg font-semibold mb-2">Debug Information</h3>
+          <button
+            onClick={testEmailJSConfig}
+            className="mb-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+          >
+            Test EmailJS Configuration
+          </button>
+          {debugInfo && (
+            <pre className="whitespace-pre-wrap bg-gray-200 dark:bg-gray-700 p-3 rounded text-sm">
+              {debugInfo}
+            </pre>
+          )}
+        </div>
+      )}
     </div>
   );
 };
