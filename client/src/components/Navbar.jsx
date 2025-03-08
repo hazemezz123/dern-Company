@@ -1,5 +1,6 @@
 import { useState, useContext, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import { AuthContext } from "../context/AuthContext";
 import { ThemeContext } from "../context/ThemeContext";
 import { AiFillAliwangwang } from "react-icons/ai";
@@ -19,12 +20,31 @@ const Navbar = () => {
     setIsProfileOpen(false);
   };
 
+  // Helper function to create animated menu items
+  const AnimatedMenuItem = ({ children, delay = 0.2, onClick = null }) => (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay }}
+      onClick={onClick}
+    >
+      {children}
+    </motion.div>
+  );
+
   // Close menus when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
+      // For mobile menu
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(event.target) &&
+        !event.target.closest('button[aria-label="Toggle menu"]')
+      ) {
         setIsMenuOpen(false);
       }
+
+      // For profile dropdown
       if (profileRef.current && !profileRef.current.contains(event.target)) {
         setIsProfileOpen(false);
       }
@@ -299,221 +319,311 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      {isMenuOpen && (
-        <div
-          ref={menuRef}
-          className="md:hidden bg-primary-light dark:bg-surface-dark absolute w-full z-50 shadow-lg"
-        >
-          <div className="px-4 py-3 space-y-3">
-            {user ? (
-              <>
-                <div className="flex items-center space-x-3 p-3 bg-primary-light/30 dark:bg-primary-dark/30 rounded-lg">
-                  <div className="w-10 h-10 rounded-full bg-blue-200 text-primary-light flex items-center justify-center font-semibold text-lg">
-                    {user.name.charAt(0).toUpperCase()}
-                  </div>
-                  <div>
-                    <p className="font-semibold text-white dark:text-text-primary-dark">
-                      {user.name}
-                    </p>
-                    <p className="text-xs text-blue-200 dark:text-text-secondary-dark">
-                      {user.email}
-                    </p>
-                  </div>
-                </div>
+      {/* Mobile Menu with Overlay */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <>
+            {/* Overlay */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+              onClick={() => setIsMenuOpen(false)}
+            ></motion.div>
 
-                {user.role === "user" && (
-                  <Link
-                    to="/dashboard"
-                    className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+            {/* Menu */}
+            <motion.div
+              ref={menuRef}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{
+                duration: 0.3,
+                type: "spring",
+                stiffness: 300,
+                damping: 30,
+              }}
+              className="md:hidden bg-primary-light dark:bg-surface-dark absolute top-16 left-0 right-0 z-50 shadow-lg"
+            >
+              <div className="px-4 py-3 space-y-3">
+                {/* Close button inside mobile menu */}
+                <motion.div
+                  className="flex justify-end"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.1 }}
+                >
+                  <button
                     onClick={() => setIsMenuOpen(false)}
+                    className="p-2 rounded-md hover:bg-primary-light/20 dark:hover:bg-primary-dark/20 focus:outline-none text-white dark:text-text-primary-dark"
+                    aria-label="Close menu"
                   >
-                    Dashboard
-                  </Link>
-                )}
-                {user.role === "admin" && (
-                  <Link
-                    to="/admin"
-                    className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Admin
-                  </Link>
-                )}
-                <Link
-                  to="/tickets"
-                  className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Tickets
-                </Link>
-                <Link
-                  to="/services"
-                  className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Services
-                </Link>
-                {user.role === "user" && (
-                  <Link
-                    to="/bookings"
-                    className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    My Bookings
-                  </Link>
-                )}
-                <Link
-                  to="/profile"
-                  className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Profile
-                </Link>
-                <Link
-                  to="/about"
-                  className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  About Us
-                </Link>
-                <Link
-                  to="/contact"
-                  className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Contact Us
-                </Link>
-                {/* Theme Toggle in Mobile Menu */}
-                <button
-                  onClick={() => {
-                    toggleTheme();
-                    setIsMenuOpen(false);
-                  }}
-                  className="w-full text-left py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20 flex items-center"
-                >
-                  {theme === "dark" ? (
-                    <>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 mr-2"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      Switch to Light Mode
-                    </>
-                  ) : (
-                    <>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 mr-2"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-                      </svg>
-                      Switch to Dark Mode
-                    </>
-                  )}
-                </button>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </motion.div>
 
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    setIsMenuOpen(false);
-                  }}
-                  className="w-full text-left py-2 px-3 rounded-md text-red-300 dark:text-red-400 hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
-                >
-                  Sign out
-                </button>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/services"
-                  className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Services
-                </Link>
-                <Link
-                  to="/login"
-                  className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/register"
-                  className="block py-2 px-3 rounded-md bg-white text-primary-light hover:bg-blue-100 dark:bg-primary-dark dark:text-white dark:hover:bg-primary-dark/90"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Register
-                </Link>
-                <Link
-                  to="/about"
-                  className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  About Us
-                </Link>
-                <Link
-                  to="/contact"
-                  className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Contact Us
-                </Link>
+                {user ? (
+                  <>
+                    <motion.div
+                      className="flex items-center space-x-3 p-3 bg-primary-light/30 dark:bg-primary-dark/30 rounded-lg"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.2 }}
+                    >
+                      <div className="w-10 h-10 rounded-full bg-blue-200 text-primary-light flex items-center justify-center font-semibold text-lg">
+                        {user.name.charAt(0).toUpperCase()}
+                      </div>
+                      <div>
+                        <p className="font-semibold text-white dark:text-text-primary-dark">
+                          {user.name}
+                        </p>
+                        <p className="text-xs text-blue-200 dark:text-text-secondary-dark">
+                          {user.email}
+                        </p>
+                      </div>
+                    </motion.div>
 
-                {/* Theme Toggle in Mobile Menu */}
-                <button
-                  onClick={() => {
-                    toggleTheme();
-                    setIsMenuOpen(false);
-                  }}
-                  className="w-full text-left py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20 flex items-center"
-                >
-                  {theme === "dark" ? (
-                    <>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 mr-2"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
+                    {user.role === "user" && (
+                      <AnimatedMenuItem delay={0.25}>
+                        <Link
+                          to="/dashboard"
+                          className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          Dashboard
+                        </Link>
+                      </AnimatedMenuItem>
+                    )}
+                    {user.role === "admin" && (
+                      <AnimatedMenuItem delay={0.25}>
+                        <Link
+                          to="/admin"
+                          className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          Admin
+                        </Link>
+                      </AnimatedMenuItem>
+                    )}
+                    <AnimatedMenuItem delay={0.3}>
+                      <Link
+                        to="/tickets"
+                        className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                        onClick={() => setIsMenuOpen(false)}
                       >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      Switch to Light Mode
-                    </>
-                  ) : (
-                    <>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 mr-2"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
+                        Tickets
+                      </Link>
+                    </AnimatedMenuItem>
+                    <AnimatedMenuItem delay={0.35}>
+                      <Link
+                        to="/services"
+                        className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                        onClick={() => setIsMenuOpen(false)}
                       >
-                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
-                      </svg>
-                      Switch to Dark Mode
-                    </>
-                  )}
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-      )}
+                        Services
+                      </Link>
+                    </AnimatedMenuItem>
+                    {user.role === "user" && (
+                      <AnimatedMenuItem delay={0.4}>
+                        <Link
+                          to="/bookings"
+                          className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          My Bookings
+                        </Link>
+                      </AnimatedMenuItem>
+                    )}
+                    <AnimatedMenuItem delay={0.45}>
+                      <Link
+                        to="/profile"
+                        className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Profile
+                      </Link>
+                    </AnimatedMenuItem>
+                    <AnimatedMenuItem delay={0.5}>
+                      <Link
+                        to="/about"
+                        className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        About Us
+                      </Link>
+                    </AnimatedMenuItem>
+                    <AnimatedMenuItem delay={0.55}>
+                      <Link
+                        to="/contact"
+                        className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Contact Us
+                      </Link>
+                    </AnimatedMenuItem>
+                    {/* Theme Toggle in Mobile Menu */}
+                    <AnimatedMenuItem delay={0.6}>
+                      <button
+                        onClick={() => {
+                          toggleTheme();
+                          setIsMenuOpen(false);
+                        }}
+                        className="w-full text-left py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20 flex items-center"
+                      >
+                        {theme === "dark" ? (
+                          <>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-5 w-5 mr-2"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                            Switch to Light Mode
+                          </>
+                        ) : (
+                          <>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-5 w-5 mr-2"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                            </svg>
+                            Switch to Dark Mode
+                          </>
+                        )}
+                      </button>
+                    </AnimatedMenuItem>
+
+                    <AnimatedMenuItem delay={0.65}>
+                      <button
+                        onClick={() => {
+                          handleLogout();
+                          setIsMenuOpen(false);
+                        }}
+                        className="w-full text-left py-2 px-3 rounded-md text-red-300 dark:text-red-400 hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                      >
+                        Sign out
+                      </button>
+                    </AnimatedMenuItem>
+                  </>
+                ) : (
+                  <>
+                    <AnimatedMenuItem delay={0.2}>
+                      <Link
+                        to="/services"
+                        className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Services
+                      </Link>
+                    </AnimatedMenuItem>
+                    <AnimatedMenuItem delay={0.25}>
+                      <Link
+                        to="/login"
+                        className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Login
+                      </Link>
+                    </AnimatedMenuItem>
+                    <AnimatedMenuItem delay={0.3}>
+                      <Link
+                        to="/register"
+                        className="block py-2 px-3 rounded-md bg-white text-primary-light hover:bg-blue-100 dark:bg-primary-dark dark:text-white dark:hover:bg-primary-dark/90"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Register
+                      </Link>
+                    </AnimatedMenuItem>
+                    <AnimatedMenuItem delay={0.35}>
+                      <Link
+                        to="/about"
+                        className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        About Us
+                      </Link>
+                    </AnimatedMenuItem>
+                    <AnimatedMenuItem delay={0.4}>
+                      <Link
+                        to="/contact"
+                        className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Contact Us
+                      </Link>
+                    </AnimatedMenuItem>
+
+                    {/* Theme Toggle in Mobile Menu */}
+                    <AnimatedMenuItem delay={0.45}>
+                      <button
+                        onClick={() => {
+                          toggleTheme();
+                          setIsMenuOpen(false);
+                        }}
+                        className="w-full text-left py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20 flex items-center"
+                      >
+                        {theme === "dark" ? (
+                          <>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-5 w-5 mr-2"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path
+                                fillRule="evenodd"
+                                d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+                                clipRule="evenodd"
+                              />
+                            </svg>
+                            Switch to Light Mode
+                          </>
+                        ) : (
+                          <>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-5 w-5 mr-2"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                            >
+                              <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                            </svg>
+                            Switch to Dark Mode
+                          </>
+                        )}
+                      </button>
+                    </AnimatedMenuItem>
+                  </>
+                )}
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };
