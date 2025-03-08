@@ -1,0 +1,83 @@
+/* Custom Scrollbar Styles */
+
+/* Light Mode Scrollbar */
+:root {
+  --scrollbar-track: #f8fafc; /* Lighter background for better contrast */
+  --scrollbar-thumb: #4a6cf7; /* Primary light color */
+  --scrollbar-thumb-hover: #3a5bd9;
+  --scrollbar-width: 8px; /* Thinner scrollbar for modern look */
+}
+
+/* Dark Mode Scrollbar */
+html.dark {
+  --scrollbar-track: #0f172a; /* Darker background for better contrast */
+  --scrollbar-thumb: #4a6cf7; /* Primary dark color */
+  --scrollbar-thumb-hover: #5d7bf9;
+}
+
+/* Webkit Browsers (Chrome, Safari, newer versions of Opera) */
+::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+  height: var(--scrollbar-width);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: calc(var(--scrollbar-width) / 2);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+/* For specific elements that need custom scrollbars */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: var(--scrollbar-width);
+  height: var(--scrollbar-width);
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: calc(var(--scrollbar-width) / 2);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Edge and IE */
+@supports (-ms-overflow-style: none) {
+  html {
+    scrollbar-face-color: var(--scrollbar-thumb);
+    scrollbar-track-color: var(--scrollbar-track);
+    scrollbar-arrow-color: var(--scrollbar-thumb);
+    scrollbar-shadow-color: var(--scrollbar-thumb);
+  }
+}

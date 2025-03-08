@@ -141,43 +141,73 @@ function App() {
                       sizes.
                     </p>
                     <div className="flex space-x-4">
-                      {/* Social Media Icons */}
-                      {[
-                        {
-                          name: "Facebook",
-                          icon: "M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z",
-                        },
-                        {
-                          name: "Twitter",
-                          icon: "M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z",
-                        },
-                        {
-                          name: "LinkedIn",
-                          icon: "M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z M4 6a2 2 0 100-4 2 2 0 000 4z",
-                        },
-                      ].map((social, index) => (
-                        <a
-                          key={index}
-                          href="#"
-                          className="w-8 h-8 rounded-full bg-primary-light/10 dark:bg-primary-dark/10 flex items-center justify-center text-primary-light dark:text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20 transition-colors duration-200"
-                          aria-label={social.name}
+                      {/* Social Media Icons with actual links */}
+                      <a
+                        href="https://www.linkedin.com/in/hazem-ezz-424498285/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-8 h-8 rounded-full bg-primary-light/10 dark:bg-primary-dark/10 flex items-center justify-center text-primary-light dark:text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20 transition-colors duration-200"
+                        aria-label="LinkedIn"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
                         >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="h-4 w-4"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d={social.icon}
-                            />
-                          </svg>
-                        </a>
-                      ))}
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z M4 6a2 2 0 100-4 2 2 0 000 4z"
+                          />
+                        </svg>
+                      </a>
+                      <a
+                        href="https://www.facebook.com/profile.php?id=61557867570271"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-8 h-8 rounded-full bg-primary-light/10 dark:bg-primary-dark/10 flex items-center justify-center text-primary-light dark:text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20 transition-colors duration-200"
+                        aria-label="Facebook"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"
+                          />
+                        </svg>
+                      </a>
+                      <a
+                        href="https://github.com/hazemezz123"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="w-8 h-8 rounded-full bg-primary-light/10 dark:bg-primary-dark/10 flex items-center justify-center text-primary-light dark:text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20 transition-colors duration-200"
+                        aria-label="GitHub"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.167 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.933.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.416 22 12c0-5.523-4.477-10-10-10z"
+                          />
+                        </svg>
+                      </a>
                     </div>
                   </div>
 
@@ -328,22 +358,28 @@ function App() {
                   </p>
                   <div className="flex space-x-6">
                     <a
-                      href="#"
+                      href="https://www.linkedin.com/in/hazem-ezz-424498285/"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-text-secondary-light dark:text-text-secondary-dark text-sm hover:text-primary-light dark:hover:text-primary-dark transition-colors"
                     >
-                      Privacy Policy
+                      LinkedIn
                     </a>
                     <a
-                      href="#"
+                      href="https://www.facebook.com/profile.php?id=61557867570271"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-text-secondary-light dark:text-text-secondary-dark text-sm hover:text-primary-light dark:hover:text-primary-dark transition-colors"
                     >
-                      Terms of Service
+                      Facebook
                     </a>
                     <a
-                      href="#"
+                      href="https://github.com/hazemezz123"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-text-secondary-light dark:text-text-secondary-dark text-sm hover:text-primary-light dark:hover:text-primary-dark transition-colors"
                     >
-                      Cookie Policy
+                      GitHub
                     </a>
                   </div>
                 </div>
