@@ -303,7 +303,7 @@ const Navbar = () => {
       {isMenuOpen && (
         <div
           ref={menuRef}
-          className="md:hidden bg-primary-light/95 dark:bg-primary-dark/95 backdrop-blur-sm absolute w-full z-50 shadow-lg"
+          className="md:hidden bg-primary-light dark:bg-surface-dark absolute w-full z-50 shadow-lg"
         >
           <div className="px-4 py-3 space-y-3">
             {user ? (
@@ -313,15 +313,19 @@ const Navbar = () => {
                     {user.name.charAt(0).toUpperCase()}
                   </div>
                   <div>
-                    <p className="font-semibold">{user.name}</p>
-                    <p className="text-xs text-blue-200">{user.email}</p>
+                    <p className="font-semibold text-white dark:text-text-primary-dark">
+                      {user.name}
+                    </p>
+                    <p className="text-xs text-blue-200 dark:text-text-secondary-dark">
+                      {user.email}
+                    </p>
                   </div>
                 </div>
 
                 {user.role === "user" && (
                   <Link
                     to="/dashboard"
-                    className="block py-2 px-3 rounded-md hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                    className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Dashboard
@@ -330,7 +334,7 @@ const Navbar = () => {
                 {user.role === "admin" && (
                   <Link
                     to="/admin"
-                    className="block py-2 px-3 rounded-md hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                    className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Admin
@@ -338,14 +342,14 @@ const Navbar = () => {
                 )}
                 <Link
                   to="/tickets"
-                  className="block py-2 px-3 rounded-md hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                  className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Tickets
                 </Link>
                 <Link
                   to="/services"
-                  className="block py-2 px-3 rounded-md hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                  className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Services
@@ -353,7 +357,7 @@ const Navbar = () => {
                 {user.role === "user" && (
                   <Link
                     to="/bookings"
-                    className="block py-2 px-3 rounded-md hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                    className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     My Bookings
@@ -361,21 +365,21 @@ const Navbar = () => {
                 )}
                 <Link
                   to="/profile"
-                  className="block py-2 px-3 rounded-md hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                  className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Profile
                 </Link>
                 <Link
                   to="/about"
-                  className="block py-2 px-3 rounded-md hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                  className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   About Us
                 </Link>
                 <Link
                   to="/contact"
-                  className="block py-2 px-3 rounded-md hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                  className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Contact Us
@@ -386,7 +390,7 @@ const Navbar = () => {
                     toggleTheme();
                     setIsMenuOpen(false);
                   }}
-                  className="w-full text-left py-2 px-3 rounded-md hover:bg-primary-light/20 dark:hover:bg-primary-dark/20 flex items-center"
+                  className="w-full text-left py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20 flex items-center"
                 >
                   {theme === "dark" ? (
                     <>
@@ -424,7 +428,7 @@ const Navbar = () => {
                     handleLogout();
                     setIsMenuOpen(false);
                   }}
-                  className="w-full text-left py-2 px-3 rounded-md text-red-300 hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                  className="w-full text-left py-2 px-3 rounded-md text-red-300 dark:text-red-400 hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
                 >
                   Sign out
                 </button>
@@ -433,14 +437,14 @@ const Navbar = () => {
               <>
                 <Link
                   to="/services"
-                  className="block py-2 px-3 rounded-md hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                  className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Services
                 </Link>
                 <Link
                   to="/login"
-                  className="block py-2 px-3 rounded-md hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                  className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Login
@@ -454,14 +458,14 @@ const Navbar = () => {
                 </Link>
                 <Link
                   to="/about"
-                  className="block py-2 px-3 rounded-md hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                  className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   About Us
                 </Link>
                 <Link
                   to="/contact"
-                  className="block py-2 px-3 rounded-md hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
+                  className="block py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Contact Us
@@ -473,7 +477,7 @@ const Navbar = () => {
                     toggleTheme();
                     setIsMenuOpen(false);
                   }}
-                  className="w-full text-left py-2 px-3 rounded-md hover:bg-primary-light/20 dark:hover:bg-primary-dark/20 flex items-center"
+                  className="w-full text-left py-2 px-3 rounded-md text-white dark:text-text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20 flex items-center"
                 >
                   {theme === "dark" ? (
                     <>
