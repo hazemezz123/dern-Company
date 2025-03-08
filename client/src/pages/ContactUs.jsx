@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useForm } from "react-hook-form";
+import emailjs from "@emailjs/browser";
 
 const ContactUs = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const formRef = useRef();
+
   const {
     register,
     handleSubmit,
@@ -11,16 +16,40 @@ const ContactUs = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
-    // Here you would typically send the data to your backend
-    setIsSubmitted(true);
-    reset();
+  const onSubmit = async (data) => {
+    try {
+      setIsLoading(true);
+      setError("");
 
-    // Reset the success message after 5 seconds
-    setTimeout(() => {
-      setIsSubmitted(false);
-    }, 5000);
+      // Get EmailJS credentials from environment variables
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+      // Prepare template parameters
+      const templateParams = {
+        from_name: data.name,
+        from_email: data.email,
+        subject: data.subject,
+        message: data.message,
+      };
+
+      // Send email using EmailJS
+      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+
+      setIsSubmitted(true);
+      reset();
+
+      // Reset the success message after 5 seconds
+      setTimeout(() => {
+        setIsSubmitted(false);
+      }, 5000);
+    } catch (err) {
+      console.error("Error sending email:", err);
+      setError("Failed to send your message. Please try again later.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -59,7 +88,13 @@ const ContactUs = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit(onSubmit)}>
+          {error && (
+            <div className="bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-300 px-4 py-3 rounded mb-6">
+              {error}
+            </div>
+          )}
+
+          <form ref={formRef} onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-4">
               <label
                 htmlFor="name"
@@ -152,9 +187,12 @@ const ContactUs = () => {
 
             <button
               type="submit"
-              className="w-full bg-primary-light hover:bg-primary-light/90 dark:bg-primary-dark dark:hover:bg-primary-dark/90 text-white py-2 px-4 rounded-md transition-colors duration-200"
+              disabled={isLoading}
+              className={`w-full bg-primary-light hover:bg-primary-light/90 dark:bg-primary-dark dark:hover:bg-primary-dark/90 text-white py-2 px-4 rounded-md transition-colors duration-200 ${
+                isLoading ? "opacity-70 cursor-not-allowed" : ""
+              }`}
             >
-              Send Message
+              {isLoading ? "Sending..." : "Send Message"}
             </button>
           </form>
         </motion.div>
