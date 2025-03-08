@@ -31,9 +31,12 @@ const AdminBookingManagement = () => {
       const searchLower = filter.search.toLowerCase();
       result = result.filter(
         (booking) =>
-          booking.service.title.toLowerCase().includes(searchLower) ||
-          booking.user.name.toLowerCase().includes(searchLower) ||
-          booking.user.email.toLowerCase().includes(searchLower)
+          booking.service?.title?.toLowerCase().includes(searchLower) ||
+          false ||
+          booking.user?.name?.toLowerCase().includes(searchLower) ||
+          false ||
+          booking.user?.email?.toLowerCase().includes(searchLower) ||
+          false
       );
     }
 
@@ -44,8 +47,14 @@ const AdminBookingManagement = () => {
     try {
       setIsLoading(true);
       const response = await getBookings(user._id, user.role);
-      setBookings(response.bookings);
-      setFilteredBookings(response.bookings);
+
+      // Filter out bookings with null service or user
+      const validBookings = response.bookings.filter(
+        (booking) => booking.service && booking.user
+      );
+
+      setBookings(validBookings);
+      setFilteredBookings(validBookings);
     } catch (err) {
       setError("Failed to load bookings. Please try again later.");
       console.error(err);
@@ -197,30 +206,34 @@ const AdminBookingManagement = () => {
                 >
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-text-primary-light dark:text-text-primary-dark">
-                      {booking.user.name}
+                      {booking.user?.name || "Unknown User"}
                     </div>
                     <div className="text-sm text-text-secondary-light dark:text-text-secondary-dark">
-                      {booking.user.email}
+                      {booking.user?.email || "No email"}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-text-primary-light dark:text-text-primary-dark">
-                      {booking.service.title}
+                      {booking.service?.title || "Unknown Service"}
                     </div>
                     <div className="text-sm text-text-secondary-light dark:text-text-secondary-dark">
-                      ${booking.service.price.toFixed(2)} •{" "}
-                      {booking.service.duration} min
+                      ${booking.service?.price?.toFixed(2) || "0.00"} •{" "}
+                      {booking.service?.duration || "0"} min
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-text-primary-light dark:text-text-primary-dark">
-                      {new Date(booking.date).toLocaleDateString()}
+                      {booking.date
+                        ? new Date(booking.date).toLocaleDateString()
+                        : "No date"}
                     </div>
                     <div className="text-sm text-text-secondary-light dark:text-text-secondary-dark">
-                      {new Date(booking.date).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
+                      {booking.date
+                        ? new Date(booking.date).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })
+                        : "No time"}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
