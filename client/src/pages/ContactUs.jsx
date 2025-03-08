@@ -444,23 +444,23 @@ const ContactUs = () => {
                 {
                   name: "Facebook",
                   icon: "M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z",
-                },
-                {
-                  name: "Twitter",
-                  icon: "M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z",
+                  link: "https://www.facebook.com/profile.php?id=61557867570271",
                 },
                 {
                   name: "LinkedIn",
                   icon: "M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z M4 6a2 2 0 100-4 2 2 0 000 4z",
+                  link: "https://www.linkedin.com/in/hazem-ezz-424498285/",
                 },
                 {
-                  name: "Instagram",
+                  name: "github",
                   icon: "M12 2a10 10 0 00-3.16 19.5c.5.08.66-.22.66-.48v-1.7c-2.67.6-3.23-1.13-3.23-1.13-.44-1.1-1.08-1.4-1.08-1.4-.88-.6.07-.6.07-.6.97.07 1.48 1 1.48 1 .86 1.47 2.26 1.04 2.8.8.09-.62.35-1.05.63-1.3-2.2-.25-4.5-1.1-4.5-4.9 0-1.08.38-1.97 1-2.65-.1-.25-.43-1.23.1-2.55 0 0 .83-.27 2.7 1a9.36 9.36 0 015 0c1.87-1.27 2.7-1 2.7-1 .53 1.32.2 2.3.1 2.55.62.68 1 1.57 1 2.65 0 3.8-2.3 4.65-4.5 4.9.35.3.67.9.67 1.8v2.67c0 .26.16.56.66.48A10 10 0 0012 2z",
+                  link: "https://github.com/hazemezz123",
                 },
               ].map((social, index) => (
                 <a
                   key={index}
-                  href="#"
+                  target="_blank"
+                  href={social.link}
                   className="w-10 h-10 rounded-full bg-primary-light/10 dark:bg-primary-dark/10 flex items-center justify-center text-primary-light dark:text-primary-dark hover:bg-primary-light/20 dark:hover:bg-primary-dark/20 transition-colors duration-200"
                   aria-label={social.name}
                 >
@@ -484,26 +484,6 @@ const ContactUs = () => {
           </div>
         </motion.div>
       </div>
-
-      {/* Map Section */}
-      <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
-        className="mb-12"
-      >
-        <h2 className="text-2xl font-bold text-text-primary-light dark:text-text-primary-dark mb-6">
-          Our Location
-        </h2>
-        <div className="bg-surface-light dark:bg-surface-dark rounded-lg shadow-md overflow-hidden border border-border-light dark:border-border-dark h-96">
-          {/* Replace with actual map component or iframe */}
-          <div className="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-            <p className="text-text-secondary-light dark:text-text-secondary-dark">
-              Map placeholder - integrate Google Maps or other map service here
-            </p>
-          </div>
-        </div>
-      </motion.section>
 
       {/* Debug section - only visible in development */}
       {import.meta.env.DEV && (
